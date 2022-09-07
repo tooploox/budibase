@@ -1,49 +1,49 @@
 import {
-  DatasourceFieldTypes,
+  DatasourceFieldType,
   Integration,
-  QueryTypes,
+  QueryType,
   SqlQuery,
-} from "../definitions/datasource"
+  Table,
+} from "@budibase/types"
 
 import { BigQuery, BigQueryOptions } from "@google-cloud/bigquery"
-import { Table } from "../definitions/common"
 
 const SCHEMA: Integration = {
   docs: "https://cloud.google.com/bigquery/docs",
   datasource: {
     projectId: {
-      type: DatasourceFieldTypes.STRING,
+      type: DatasourceFieldType.STRING,
       required: true,
     },
     datasetId: {
-      type: DatasourceFieldTypes.STRING,
+      type: DatasourceFieldType.STRING,
       required: true,
     },
     apiEndpoint: {
-      type: DatasourceFieldTypes.STRING,
+      type: DatasourceFieldType.STRING,
       required: false,
     },
     email: {
-      type: DatasourceFieldTypes.STRING,
+      type: DatasourceFieldType.STRING,
       required: true,
     },
     privateKey: {
-      type: DatasourceFieldTypes.STRING,
+      type: DatasourceFieldType.STRING,
       required: true,
     },
   },
   query: {
     create: {
-      type: QueryTypes.SQL,
+      type: QueryType.SQL,
     },
     read: {
-      type: QueryTypes.SQL,
+      type: QueryType.SQL,
     },
     update: {
-      type: QueryTypes.SQL,
+      type: QueryType.SQL,
     },
     delete: {
-      type: QueryTypes.SQL,
+      type: QueryType.SQL,
     },
   },
   friendlyName: "BigQuery",
@@ -85,6 +85,8 @@ class BigQueryIntegration {
   }
 
   async createDatasetIfDoesNotExist() {
+    // TODO: To prevent a race condition, try to create dataset first, only
+    // return if error creating because it already exists.
     try {
       const existingDataset = await this.client.dataset(this.datasetId).get()
       if (!existingDataset) {
@@ -130,7 +132,7 @@ class BigQueryIntegration {
   }
 }
 
-module.exports = {
+export default {
   schema: SCHEMA,
   integration: BigQueryIntegration,
 }
