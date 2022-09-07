@@ -60,6 +60,16 @@ interface BigQueryConfig extends BigQueryOptions {
   privateKey: string
 }
 
+type RawRow = {
+  [key: string]: any
+}
+
+type CoercedFieldValue = string | Date | null
+
+type CoercedRow = {
+  [key: string]: CoercedFieldValue
+}
+
 class BigQueryIntegration {
   private client: any
   private static readonly BIG_QUERY_SCOPES = [
@@ -112,7 +122,10 @@ class BigQueryIntegration {
   async read(query: SqlQuery) {
     const [job] = await this.internalQuery(query)
     const [rows] = await job.getQueryResults()
-    return rows
+    rows.forEach((row: any) => {
+      console.log(row)
+    })
+    return rows.map((row: RawRow) => this.coerceRow(row))
   }
 
   async update(query: SqlQuery) {
@@ -125,9 +138,28 @@ class BigQueryIntegration {
 
   async buildSchema(datasourceId: string, entities: Record<string, Table>) {
     // fetch all existing tables
+    // const dataset = this.client.dataset(this.datasetId)
+    // const tables = await dataset.getTables()
+  }
 
-    const dataset = this.client.dataset(this.datasetId)
-    const tables = await dataset.getTables()
+  coerceRow(row: RawRow): CoercedRow {
+    return Object.keys(row).reduce((newRow: CoercedRow, key: string) => {
+      newRow[key] = this.coerceValue(row[key])
+      return newRow
+    }, {})
+  }
+
+  coerceValue(v: any): CoercedFieldValue {
+    // TODO: Add support for all Bigquery types (e.g. BigQueryTimestamp).
+    if (v === null || v === undefined) {
+      return null
+    } else if (typeof v.value === "function") {
+      return v.value()
+    } else if (typeof v === "string") {
+      return v
+    } else {
+      return "UNSUPPORTED"
+    }
   }
 }
 
