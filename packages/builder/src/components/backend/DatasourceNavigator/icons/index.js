@@ -16,6 +16,7 @@ import Firebase from "./Firebase.svelte"
 import Redis from "./Redis.svelte"
 import Snowflake from "./Snowflake.svelte"
 import Custom from "./Custom.svelte"
+import BigQuery from "./BigQuery.svelte"
 
 const ICONS = {
   BUDIBASE: Budibase,
@@ -36,6 +37,7 @@ const ICONS = {
   REDIS: Redis,
   SNOWFLAKE: Snowflake,
   CUSTOM: Custom,
+  BIG_QUERY: BigQuery,
 }
 
 export default ICONS

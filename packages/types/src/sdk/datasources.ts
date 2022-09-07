@@ -51,6 +51,7 @@ export enum SourceName {
   FIRESTORE = "FIRESTORE",
   REDIS = "REDIS",
   SNOWFLAKE = "SNOWFLAKE",
+  BIG_QUERY = "BIG_QUERY",
   UNKNOWN = "unknown",
 }
 
