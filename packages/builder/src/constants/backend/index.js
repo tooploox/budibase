@@ -183,6 +183,7 @@ export const IntegrationTypes = {
   FIRESTORE: "FIRESTORE",
   REDIS: "REDIS",
   SNOWFLAKE: "SNOWFLAKE",
+  BIG_QUERY: "BIG_QUERY",
 }
 
 export const IntegrationNames = {
@@ -203,6 +204,7 @@ export const IntegrationNames = {
   [IntegrationTypes.FIRESTORE]: "Firestore",
   [IntegrationTypes.REDIS]: "Redis",
   [IntegrationTypes.SNOWFLAKE]: "Snowflake",
+  [IntegrationTypes.BIG_QUERY]: "Big Query",
 }
 
 export const SchemaTypeOptions = [

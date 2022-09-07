@@ -22,6 +22,7 @@ export const IntegrationNames = {
   ARANGODB: "ArangoDB",
   ORACLE: "Oracle",
   GOOGLE_SHEETS: "Google Sheets",
+  BIG_QUERY: "Big Query",
 }
 
 // fields on the user table that cannot be edited
