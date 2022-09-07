@@ -128,7 +128,6 @@ class BigQueryIntegration {
 
     const dataset = this.client.dataset(this.datasetId)
     const tables = await dataset.getTables()
-    console.log(tables)
   }
 }
 
