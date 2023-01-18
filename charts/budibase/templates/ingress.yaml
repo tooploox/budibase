@@ -22,6 +22,15 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+    # {{- if .Values.ingress.staticIP }}
+    # kubernetes.io/ingress.global-static-ip-name: "web-static-ip"
+    # {{- end }}
+    {{- if .Values.ingress.gce.enabled }}
+    networking.gke.io/v1beta1.FrontendConfig: {{ include "budibase.fullname" . }}-frontend-config
+    {{- end }}
+    {{- if .Values.ingress.gce.managedCertificate.enabled }}
+    networking.gke.io/managed-certificates: {{ include "budibase.fullname" . }}-certificate
+    {{- end }}
 spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.className }}
