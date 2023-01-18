@@ -1,0 +1,9 @@
+apiVersion: v2
+name: budibase-dev
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+dependencies:
+  - name: budibase
+    version: 0.3.01
+    repository: file://../budibase

@@ -12,7 +12,7 @@ sources:
   - https://budibase.com
 type: application
 # populates on packaging
-version: 0.0.0
+version: 0.2.12
 # populates on packaging
 appVersion: 0.0.0
 dependencies:

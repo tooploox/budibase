@@ -1,0 +1,22 @@
+budibase:
+  ingress:
+    enabled: true
+    # aws: true
+    nginx: false
+    gce:
+      enabled: true
+      managedCertificate:
+        enabled: true
+    className: ""
+    annotations: 
+      kubernetes.io/ingress.class: gce
+    hosts:
+      - host: dev.budibase.apps.tooploox.com
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: proxy-service
+              port:
+                number: 10000

@@ -41,8 +41,13 @@ service:
 
 ingress:
   enabled: true
+  # class: nginx,aws,gce
   aws: false
   nginx: true
+  gce:
+    enabled: false
+    managedCertificate:
+      enabled: false
   certificateArn: ""
   className: ""
   annotations:

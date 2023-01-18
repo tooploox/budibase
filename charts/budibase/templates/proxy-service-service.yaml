@@ -4,6 +4,9 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.21.0 (992df58d8)
+    {{- if .Values.ingress.gce.enabled }}
+    cloud.google.com/backend-config: '{"default": "{{ include "budibase.fullname" . }}"}'
+    {{- end }}
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: budibase-proxy
@@ -15,5 +18,8 @@ spec:
     targetPort: {{ .Values.services.proxy.port }}
   selector:
     app.kubernetes.io/name: budibase-proxy
+{{- if .Values.ingress.gce }}
+  type: NodePort
+{{- end }}
 status:
   loadBalancer: {}

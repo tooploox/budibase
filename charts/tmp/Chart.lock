@@ -1,0 +1,6 @@
+dependencies:
+- name: budibase
+  repository: file://../budibase
+  version: 0.3.01
+digest: sha256:5ef79008a880af8b382bb446040f475c167c1134dce93ec4c4831b080b457c03
+generated: "2023-01-17T21:47:51.50175+01:00"

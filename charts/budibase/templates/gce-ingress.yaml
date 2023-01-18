@@ -1,0 +1,78 @@
+# {{- if .Values.ingress.gce.enabled }}
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: {{ include "budibase.fullname" . }}
+#   annotations:
+#     kubernetes.io/ingress.class: gce
+#     # {{- if .Values.ingress.gce.staticIP }}
+#     # kubernetes.io/ingress.global-static-ip-name: "web-static-ip"
+#     # {{- end }}
+#     {{- if .Values.ingress.gce.managedCertificate.enabled }}
+#     networking.gke.io/managed-certificates: {{ include "budibase.fullname" . }}-certificate
+#     {{- end }}
+#     {{- if .Values.ingress.gce.enabled }}
+#     networking.gke.io/v1beta1.FrontendConfig: {{ include "budibase.fullname" . }}-frontend-config
+#     {{- end }}
+# spec:
+#   rules:
+#     {{- range .Values.ingress.hosts }}
+#     - host: {{ .host | quote }}
+#       http:
+#         paths:
+#           {{- range .paths }}
+#           - path: {{ .path }}
+#             {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+#             pathType: {{ .pathType }}
+#             {{- end }}
+#             backend:
+#               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+#               service:
+#                 name: {{ .backend.service.name }}
+#                 port:
+#                   number: {{ .backend.service.port.number }}
+#               {{- else }}
+#               serviceName: {{ .backend.service.name }}
+#               servicePort: {{ .backend.service.port.number }}
+#               {{- end }}
+#           {{- end }}
+#     {{- end }}
+# {{- end }}
+---
+{{- if .Values.ingress.gce.enabled }}
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: {{ include "budibase.fullname" . }}
+spec:
+  healthCheck:
+    # checkIntervalSec: 15
+    # port: 15020
+    # type: HTTPS
+    requestPath: /builder #root doesn't return 200
+{{- end }}
+---
+{{- if .Values.ingress.gce.managedCertificate.enabled }}
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: {{ include "budibase.fullname" . }}-frontend-config
+spec:
+  redirectToHttps:
+    enabled: true
+{{- end }}
+---
+{{- if .Values.ingress.gce.managedCertificate.enabled }}
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: {{ include "budibase.fullname" . }}-certificate
+  labels:
+    {{- include "budibase.labels" . | nindent 4 }}
+spec:
+  domains:
+    {{- range .Values.ingress.hosts }}
+    - {{ .host | quote }}
+    {{- end }}
+{{- end }}
+
